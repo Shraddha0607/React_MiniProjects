@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import { createContext, useState } from "react";
 
 const UserProgressContext = createContext({
     progress : "",
@@ -7,17 +7,19 @@ const UserProgressContext = createContext({
 });
 
 export function UserProgressContextProvider ({children}) {
+    const [userProgress, setUserProgress] = useState('');
 
     function openForm () {
-        console.log("open modal form to give feedback.");
+        setUserProgress("form")
     }
 
     function closeForm () {
+        setUserProgress("");
         console.log("close modal form from which giving feedback. ");
     }
 
     const userProgressCtx = {
-        progress : "",
+        progress : userProgress,
         openForm,
         closeForm
     };

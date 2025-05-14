@@ -1,10 +1,10 @@
 import React from 'react'
 
-function Input({name}) {
+function Input({ label, type, id }) {
   return (
     <div>
-      <label>{name}</label>
-      <input required></input>
+      <label htmlFor={id}>{label}</label>
+      <input required type={type} name={id}></input>
     </div>
   )
 }

@@ -4,6 +4,7 @@ import Header from './components/Header'
 import FeedbackContextProvider from './store/FeedbackContext'
 import FeedbackForm from './components/FeedbackForm'
 import { UserProgressContextProvider }from './store/UserProgressContext'
+import FeedbackList from './components/FeedbackList'
 
 function App() {
 
@@ -13,6 +14,7 @@ function App() {
         <FeedbackContextProvider >
           <Header />
           <FeedbackForm />
+          <FeedbackList />
         </FeedbackContextProvider >
       </UserProgressContextProvider>
     </>
