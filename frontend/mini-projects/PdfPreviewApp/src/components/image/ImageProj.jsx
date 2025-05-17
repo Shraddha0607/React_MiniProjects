@@ -21,8 +21,9 @@ function ImageProj() {
         <div>
             <label>Select image</label>
             <input type="file" onChange={handleChange} />
-            {isOpen && <ImagePreview file={file} />}
-            {file != null && <button onClick={getPreviewHandler}>Get Preview</button>}
+            {isOpen && <iframe src ={file}></iframe> }
+             {/* {isOpen && <ImagePreview file={file} />} */}
+             {file != null && <button onClick={getPreviewHandler}>Get Preview</button>} 
         </div>
     )
 }
