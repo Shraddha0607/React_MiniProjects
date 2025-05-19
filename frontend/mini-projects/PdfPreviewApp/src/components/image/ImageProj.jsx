@@ -9,14 +9,12 @@ function ImageProj() {
   const [isOpen, setIsOpen] = useState(false);
   const [fileName, setFileName] = useState("");
   const [imageDetails, setImageDetails] = useState([]);
-
-  // const details = getDetails();
-  // console.log("detalis are ", details);
-  // setImageDetails(details);
+  const [isUpdated, setIsUpdated] = useState(false);
 
   function handleChange(event) {
     const file = event.target.files[0];
     console.log("file is ", file);
+    console.log("in file url saved  is ", URL.createObjectURL(file));
 
     setFileUrl(URL.createObjectURL(file));
 
@@ -32,13 +30,12 @@ function ImageProj() {
   useEffect(() => {
 
     const existingDetails = getDetails();
-    console.log(" existing details ", existingDetails)
     setImageDetails(existingDetails);
+    console.log("inside useEffect ", imageDetails)
 
-  }, []);
+  }, [isUpdated]);
 
-  console.log(" file is ", fileUrl);
-  console.log(" image details are ", imageDetails);
+  console.log(" isUpdated is ", isUpdated);
 
   function getPreviewHandler() {
     setIsOpen(true);
@@ -52,6 +49,9 @@ function ImageProj() {
     }
 
     saveDetails(payload);
+    setIsUpdated(!isUpdated);
+    setIsOpen(false);
+    setFileUrl("");
   }
 
   return (
@@ -60,7 +60,7 @@ function ImageProj() {
         <label>Select image</label>
         <input type="file" onChange={handleChange} />
         {fileUrl != null && <button onClick={uploadHandler}>Upload</button>}
-        {isOpen && <ImagePreview file={file} />}
+        {isOpen && <ImagePreview file={fileUrl} />}
         {fileUrl != null && <button onClick={getPreviewHandler}>Get Preview</button>}
       </div>
       <div>
