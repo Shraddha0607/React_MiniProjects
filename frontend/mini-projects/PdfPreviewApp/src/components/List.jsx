@@ -1,26 +1,16 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { deleteDetails } from '../services/pdfServices'
-import ImagePreview from './image/ImagePreview';
+import Modal from './Modal';
 
 function List({ details }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [file, setFile] = useState('');
-
-  function deleteHandler(id) {
-    console.log("delete is clicked");
-    deleteDetails(id);
-  }
-
-  function getPreviewHandler(fileUrl) {
-    console.log("preview clicked");
-    setIsOpen(true);
-    setFile(fileUrl);
-  }
-
+  const [fileData, setFileData] = useState(null);
 
   return (
     <div>
-      {isOpen && <ImagePreview file={file} />}
+      <Modal isOpen={!!fileData}>
+        <img src={fileData} style={{ height: "300px", width: "300px" }} />
+        <button onClick={() => setFileData(null)}>Close</button>
+      </Modal>
       <table>
         <thead>
           <tr>
@@ -35,8 +25,8 @@ function List({ details }) {
             <tr key={detail.id}>
               <td>{detail.fileName}</td>
               <td>{detail.uploadTime}</td>
-              <td><button onClick={() => getPreviewHandler(detail.fileUrl)}>Preview</button></td>
-              <td><button onClick={() => deleteHandler(detail.id)}>Delete</button></td>
+              <td><button onClick={() => setFileData(detail.fileData)}>Preview</button></td>
+              <td><button onClick={() => deleteDetails(detail.id)}>Delete</button></td>
             </tr>
           ))}
         </tbody>
