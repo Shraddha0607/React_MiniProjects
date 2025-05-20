@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react';
-import ImagePreview from './ImagePreview';
 import { saveDetails, getDetails } from '../../services/pdfServices';
 import List from '../List';
 
 function ImageProj() {
+
+  const [fileData, setFileData] = useState({});
+
   const [fileUrl, setFileUrl] = useState();
   const [isOpen, setIsOpen] = useState(false);
   const [fileName, setFileName] = useState("");
@@ -13,18 +15,22 @@ function ImageProj() {
 
   function handleChange(event) {
     const file = event.target.files[0];
-    console.log("file is ", file);
-    console.log("in file url saved  is ", URL.createObjectURL(file));
-
-    setFileUrl(URL.createObjectURL(file));
 
     if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const imageDataUrl = e.target.result;
+        setFileData(imageDataUrl);
+      };
+
+      setFileUrl(URL.createObjectURL(file));
+      reader.readAsDataURL(file);
+
       setFileName(file.name);
     }
     else {
       setFileName('');
     }
-
   }
 
   useEffect(() => {
@@ -45,7 +51,8 @@ function ImageProj() {
 
     const payload = {
       fileName: fileName,
-      fileUrl: fileUrl
+      fileUrl: fileUrl,
+      fileData: fileData
     }
 
     saveDetails(payload);
@@ -60,8 +67,6 @@ function ImageProj() {
         <label>Select image</label>
         <input type="file" onChange={handleChange} />
         {fileUrl != null && <button onClick={uploadHandler}>Upload</button>}
-        {isOpen && <ImagePreview file={fileUrl} />}
-        {fileUrl != null && <button onClick={getPreviewHandler}>Get Preview</button>}
       </div>
       <div>
         <List details={imageDetails} />
