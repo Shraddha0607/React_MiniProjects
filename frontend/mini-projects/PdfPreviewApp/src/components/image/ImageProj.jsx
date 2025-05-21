@@ -7,9 +7,11 @@ function ImageProj() {
   const [fileDetails, setFileDetails] = useState({
     fileData: '',
     fileName: '',
+    category: ''
   });
 
   const [fileData, setFileData] = useState();
+  const [category, setCategory] = useState();
   const fileRef = useRef();
 
   const [imageDetails, setImageDetails] = useState(getDetails());
@@ -25,7 +27,8 @@ function ImageProj() {
           {
             ...prevDetails,
             fileData: imageDataUrl,
-            fileName: file.name
+            fileName: file.name,
+            category: ""
           }
         ));
       };
@@ -38,22 +41,32 @@ function ImageProj() {
     setImageDetails(getDetails());
   }
 
-  function uploadHandler() {
-
+  function isValidImage(fileName) {
     const validUrl = ['.jpg', '.jpeg', '.png'];
     let isValid = false;
     for (let extension of validUrl) {
-      isValid = fileDetails.fileName.includes(extension);
+      isValid = fileName.includes(extension);
       if (isValid) {
         break;
       }
     }
 
-    if (!isValid) {
-      alert('Only image extension allowed like .jpg, .jpeg, .png');
+    return isValid;
+  }
+
+  function uploadHandler() {
+    if (fileDetails.fileName.includes('pdf')) {
+      fileDetails.category = 'pdf';
+    }
+    else if (isValidImage(fileDetails.fileName)) {
+      fileDetails.category = 'image';
+    }
+    else {
+      alert('Only image and pdf are allowed!');
       setFileDetails({
         fileData: '',
         fileName: '',
+        category: ''
       });
 
       fileRef.current.value = '';
@@ -63,7 +76,8 @@ function ImageProj() {
 
     const payload = {
       fileName: fileDetails.fileName,
-      fileData: fileDetails.fileData
+      fileData: fileDetails.fileData,
+      category: fileDetails.category
     }
 
     saveDetails(payload);
@@ -72,26 +86,29 @@ function ImageProj() {
     setFileDetails({
       fileData: '',
       fileName: '',
+      category: ''
     });
 
     fileRef.current.value = '';
 
   }
 
-  function previewDataSetter(fileData) {
+  function previewDataSetter(fileData, category) {
     setFileData(fileData);
+    setCategory(category);
   }
 
   return (
     <>
       <div className='container border-1'>
-        <label>Select image</label>
-        <input ref={fileRef} type="file" onChange={handleChange} accept='.png, .jpg, .jpeg' />
+        <label>Select Your File</label>
+        <input ref={fileRef} type="file" onChange={handleChange} accept='.png, .jpg, .jpeg, .pdf' />
         {fileDetails.fileData && <button onClick={uploadHandler}>Upload</button>}
       </div>
       <div>
-        <List details={imageDetails} updateDetails={updateDetails} previewDataSetter={previewDataSetter} file="image">
-          <img src={fileData} style={{ height: "300px", width: "300px" }} />
+        <List details={imageDetails} updateDetails={updateDetails} previewDataSetter={previewDataSetter}>
+          {category === 'image' && <img src={fileData} style={{ height: "300px", width: "300px" }} />}
+          {category === 'pdf' && <iframe src={fileData} style={{ height: "300px", width: "300px" }} />}
         </List>
       </div>
     </>

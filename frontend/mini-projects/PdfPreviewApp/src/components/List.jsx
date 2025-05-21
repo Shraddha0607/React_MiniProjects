@@ -1,18 +1,17 @@
 import { useState } from 'react'
 import { deleteDetails } from '../services/ImageServices'
-import { deleteDetailsPdf } from '../services/PdfServices';
 import Modal from './Modal';
 
 function List({ details, updateDetails, previewDataSetter, children, file }) {
   const [fileData, setFileData] = useState(null);
 
   function deleteHandler(id) {
-    {file === 'image'? deleteDetails(id) : deleteDetailsPdf(id)};
+    deleteDetails(id);
     updateDetails();
   }
 
-  function previewHandler(fileData) {
-    previewDataSetter(fileData)
+  function previewHandler(fileData, category) {
+    previewDataSetter(fileData, category)
     setFileData(fileData)
   }
 
@@ -36,7 +35,7 @@ function List({ details, updateDetails, previewDataSetter, children, file }) {
             <tr key={detail.id}>
               <td>{detail.fileName}</td>
               <td>{detail.uploadTime}</td>
-              <td><button onClick={() => previewHandler(detail.fileData)}>Preview</button></td>
+              <td><button onClick={() => previewHandler(detail.fileData, detail.category)}>Preview</button></td>
               <td><button onClick={() => deleteHandler(detail.id)}>Delete</button></td>
             </tr>
           ))}

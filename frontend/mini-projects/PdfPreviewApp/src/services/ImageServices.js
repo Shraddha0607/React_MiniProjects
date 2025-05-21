@@ -1,4 +1,3 @@
-
 const KeyImage = "ImagePreviewApp"
 
 export function getDetails() {
@@ -6,7 +5,7 @@ export function getDetails() {
     return stored ? JSON.parse(stored) : [];
 }
 
-export function saveDetails (value) {
+export function saveDetails(value) {
     const existing = getDetails();
 
     const newEntity = {
@@ -16,12 +15,16 @@ export function saveDetails (value) {
     }
 
     existing.push(newEntity);
+    try {
+        localStorage.setItem(KeyImage, JSON.stringify(existing));
+    } catch (e) {
+        console.log('local storage is full');
+    }
 
-    localStorage.setItem(KeyImage, JSON.stringify(existing));
 
 };
 
-export function deleteDetails (id){
+export function deleteDetails(id) {
     const stored = getDetails();
     const updated = stored.filter(details => details.id !== id);
 
