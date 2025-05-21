@@ -20,6 +20,26 @@ function ImageProj() {
     const file = event.target.files[0];
 
     if (file) {
+
+      let fileCategory = "";
+      if (file.name.includes('pdf')) {
+        fileCategory = 'pdf';
+      }
+      else if (isValidImage(file.name)) {
+        fileCategory = 'image';
+      }
+      else {
+        alert('Only image and pdf are allowed!');
+        setFileDetails({
+          fileData: '',
+          fileName: '',
+          category: ''
+        });
+
+        fileRef.current.value = '';
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = function (e) {
         const imageDataUrl = e.target.result;
@@ -28,7 +48,7 @@ function ImageProj() {
             ...prevDetails,
             fileData: imageDataUrl,
             fileName: file.name,
-            category: ""
+            category: fileCategory
           }
         ));
       };
@@ -55,24 +75,6 @@ function ImageProj() {
   }
 
   function uploadHandler() {
-    if (fileDetails.fileName.includes('pdf')) {
-      fileDetails.category = 'pdf';
-    }
-    else if (isValidImage(fileDetails.fileName)) {
-      fileDetails.category = 'image';
-    }
-    else {
-      alert('Only image and pdf are allowed!');
-      setFileDetails({
-        fileData: '',
-        fileName: '',
-        category: ''
-      });
-
-      fileRef.current.value = '';
-
-      return;
-    }
 
     const payload = {
       fileName: fileDetails.fileName,
