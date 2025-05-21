@@ -20,7 +20,7 @@ export function saveDetails (value) {
 
 };
 
-export function deleteDetails (id){
+export function deleteDetailsPdf (id){
     const stored = getDetails();
     const updated = stored.filter(details => details.id !== id);
 

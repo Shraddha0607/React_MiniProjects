@@ -40,6 +40,18 @@ function PdfProj() {
 
   function uploadHandler() {
 
+    const isValid = fileDetails.fileName.includes('.pdf');
+    if (!isValid) {
+      alert('Only pdf files is allowed!');
+      
+      setFileDetails({
+        fileData: '',
+        fileName: '',
+      });
+      fileRef.current.value = '';
+
+      return;
+    }
     const payload = {
       fileName: fileDetails.fileName,
       fileData: fileDetails.fileData
@@ -64,11 +76,11 @@ function PdfProj() {
     <>
       <div className='container border-1'>
         <label>Select Resume</label>
-        <input ref={fileRef} type="file" onChange={handleChange} />
+        <input ref={fileRef} type="file" onChange={handleChange} accept='.pdf' />
         {fileDetails.fileData && <button onClick={uploadHandler}>Upload</button>}
       </div>
       <div>
-        <List details={PdfDetails} updateDetails={updateDetails} previewDataSetter={previewDataSetter} >
+        <List details={PdfDetails} updateDetails={updateDetails} previewDataSetter={previewDataSetter} file="pdf">
           <iframe src={fileData} style={{ height: "300px", width: "300px" }} />
         </List>
       </div>

@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { deleteDetails } from '../services/ImageServices'
+import { deleteDetailsPdf } from '../services/PdfServices';
 import Modal from './Modal';
 
-function List({ details, updateDetails, previewDataSetter, children }) {
+function List({ details, updateDetails, previewDataSetter, children, file }) {
   const [fileData, setFileData] = useState(null);
 
   function deleteHandler(id) {
-    deleteDetails(id)
+    {file === 'image'? deleteDetails(id) : deleteDetailsPdf(id)};
     updateDetails();
   }
 

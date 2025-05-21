@@ -40,6 +40,27 @@ function ImageProj() {
 
   function uploadHandler() {
 
+    const validUrl = ['.jpg', '.jpeg', '.png'];
+    let isValid = false;
+    for (let extension of validUrl) {
+      isValid = fileDetails.fileName.includes(extension);
+      if (isValid) {
+        break;
+      }
+    }
+
+    if (!isValid) {
+      alert('Only image extension allowed like .jpg, .jpeg, .png');
+      setFileDetails({
+        fileData: '',
+        fileName: '',
+      });
+
+      fileRef.current.value = '';
+
+      return;
+    }
+
     const payload = {
       fileName: fileDetails.fileName,
       fileData: fileDetails.fileData
@@ -53,7 +74,7 @@ function ImageProj() {
       fileName: '',
     });
 
-    fileRef.current.value  = '';
+    fileRef.current.value = '';
 
   }
 
@@ -65,11 +86,11 @@ function ImageProj() {
     <>
       <div className='container border-1'>
         <label>Select image</label>
-        <input ref = {fileRef} type="file" onChange={handleChange} />
-        {fileDetails.fileData  && <button onClick={uploadHandler}>Upload</button>}
+        <input ref={fileRef} type="file" onChange={handleChange} accept='.png, .jpg, .jpeg' />
+        {fileDetails.fileData && <button onClick={uploadHandler}>Upload</button>}
       </div>
       <div>
-        <List details={imageDetails} updateDetails={updateDetails} previewDataSetter={previewDataSetter} >
+        <List details={imageDetails} updateDetails={updateDetails} previewDataSetter={previewDataSetter} file="image">
           <img src={fileData} style={{ height: "300px", width: "300px" }} />
         </List>
       </div>
