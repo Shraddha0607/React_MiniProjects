@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { saveDetails, getDetails } from '../../services/pdfServices';
+import { useState, useRef } from 'react';
+import { saveDetails, getDetails } from '../../services/ImageServices';
 import List from '../List';
 
 function ImageProj() {
@@ -7,8 +7,10 @@ function ImageProj() {
   const [fileDetails, setFileDetails] = useState({
     fileData: '',
     fileName: '',
-    isUpdated: false
   });
+
+  const [fileData, setFileData] = useState();
+  const fileRef = useRef();
 
   const [imageDetails, setImageDetails] = useState(getDetails());
 
@@ -21,15 +23,19 @@ function ImageProj() {
         const imageDataUrl = e.target.result;
         setFileDetails((prevDetails) => (
           {
-            ...prevDetails, 
+            ...prevDetails,
             fileData: imageDataUrl,
-            fileName : file.name
+            fileName: file.name
           }
         ));
       };
 
       reader.readAsDataURL(file);
     }
+  }
+
+  function updateDetails() {
+    setImageDetails(getDetails());
   }
 
   function uploadHandler() {
@@ -40,22 +46,32 @@ function ImageProj() {
     }
 
     saveDetails(payload);
-    setFileDetails((prevDetails) => ({
-      ...prevDetails,
-      isUpdated : !prevDetails.isUpdated
-    }))
-    setImageDetails(getDetails());
+
+    updateDetails();
+    setFileDetails({
+      fileData: '',
+      fileName: '',
+    });
+
+    fileRef.current.value  = '';
+
+  }
+
+  function previewDataSetter(fileData) {
+    setFileData(fileData);
   }
 
   return (
     <>
       <div className='container border-1'>
         <label>Select image</label>
-        <input type="file" onChange={handleChange} />
-        {fileDetails.fileData != null && <button onClick={uploadHandler}>Upload</button>}
+        <input ref = {fileRef} type="file" onChange={handleChange} />
+        {fileDetails.fileData  && <button onClick={uploadHandler}>Upload</button>}
       </div>
       <div>
-        <List details={imageDetails} />
+        <List details={imageDetails} updateDetails={updateDetails} previewDataSetter={previewDataSetter} >
+          <img src={fileData} style={{ height: "300px", width: "300px" }} />
+        </List>
       </div>
     </>
   )

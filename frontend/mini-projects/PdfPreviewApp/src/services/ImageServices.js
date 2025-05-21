@@ -1,7 +1,8 @@
-const KeyPdf = "PdfPreviewApp"
+
+const KeyImage = "ImagePreviewApp"
 
 export function getDetails() {
-    const stored = localStorage.getItem(KeyPdf);
+    const stored = localStorage.getItem(KeyImage);
     return stored ? JSON.parse(stored) : [];
 }
 
@@ -16,7 +17,7 @@ export function saveDetails (value) {
 
     existing.push(newEntity);
 
-    localStorage.setItem(KeyPdf, JSON.stringify(existing));
+    localStorage.setItem(KeyImage, JSON.stringify(existing));
 
 };
 
@@ -24,7 +25,7 @@ export function deleteDetails (id){
     const stored = getDetails();
     const updated = stored.filter(details => details.id !== id);
 
-    localStorage.setItem(KeyPdf, JSON.stringify(updated));
+    localStorage.setItem(KeyImage, JSON.stringify(updated));
 }
 
 function generateDate() {
@@ -34,6 +35,7 @@ function generateDate() {
     const month = today.getMonth() + 1;
     const day = today.getDate();
     const DateValue = `${day}-${month}-${year}`;
+
 
     return DateValue;
 }
